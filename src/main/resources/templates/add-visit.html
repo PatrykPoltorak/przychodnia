@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Dodaj Pracownika</title>
+	<meta charset="UTF-8"/>	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/app.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+			<a class="navbar-brand mr-5" href="/home">Przychodnia</a>
+				<div class="collapse navbar-collapse" id="mainmenu">
+					<ul class="navbar-nav mr-auto">		
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/patient/add">Dodaj Pacjenta</a>
+							</li>		
+							 <li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+							 	<a class="nav-link" href="/patient">Pacjent</a>
+						 	</li>	
+							<li sec:authorize = "hasRole('ADMIN')" class="nav-item">
+								<a class="nav-link" href="/user/add">Pracownik</a>
+							</li>						
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/user/doctors">Grafik</a>
+							</li>
+						<li class="nav-item">
+							<a class="nav-link"  th:href="@{/logout}">Wyloguj</a>
+						</li>
+					</ul>
+				</div>					
+			</nav>
+	</header>
+	<section>
+   		<div class="container-fluid">
+  	 		<div class="row">
+	            <main role="main" class="col-12 ml-sm-auto px-md-4">
+					<form action="#" th:action="@{/patient/add-visit}" th:object="${visit} " method="post">											
+						<Label>Imię Pacjenta</Label>
+						<a th:text = "${patients.name}" class="form-control mb-4 col-4"></a>
+						<Label>Nazwisko Pacjenta</Label>
+						<a th:text = "${patients.surname}" class="form-control mb-4 col-4"/></a>	
+						<input type="hidden" th:value = "${patients.id}" name ="patient"/>	
+						<div>
+							<Label>Data Wizyty</Label>
+							<input  th:field = "*{visit_date}" type="date"/>
+							<div th:if="${data}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+											<span th:text="${data}"></span>
+							</div>
+						</div>
+						<div>
+							<Label>Lekarz</Label>
+							<select th:field = "*{users}">
+								<option id ="lekarze" th:each = "tmpdoctor : ${doctor}" 
+								 th:value = "${tmpdoctor.id}" 
+								 th:utext = "${tmpdoctor.name +' '+ tmpdoctor.surname}" 
+								 ></option>
+							</select>
+						</div>	
+						<input type="hidden" name = "status" th:value = "0"> 
+						<input type = "submit" value = "Zapisz" class="btn btn-info col-2"/>															
+					</form>	
+				</main>
+			</div>
+		</div>
+	</section>			
+</body>
+</html>

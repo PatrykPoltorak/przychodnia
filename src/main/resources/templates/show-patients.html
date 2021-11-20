@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Pacjent</title>
+	<meta charset="UTF-8"/>	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/app.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+			<a class="navbar-brand mr-5" href="/home">Przychodnia</a>
+				<div class="collapse navbar-collapse" id="mainmenu">
+					<ul class="navbar-nav mr-auto">		
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/patient/add">Dodaj Pacjenta</a>
+							</li>		
+							 <li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+							 	<a class="nav-link" href="/patient">Pacjent</a>
+						 	</li>	
+							<li sec:authorize = "hasRole('ADMIN')" class="nav-item">
+								<a class="nav-link" href="/user/add">Pracownik</a>
+							</li>						
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/user/doctors">Grafik</a>
+							</li>
+						<li class="nav-item">
+							<a class="nav-link"  th:href="@{/logout}">Wyloguj</a>
+						</li>
+					</ul>
+				</div>					
+			</nav>
+	</header>
+	<section>
+	    <div class="container-fluid">
+	        <div class="row">
+	            <main role="main" class="col-12 ml-sm-auto px-md-4">
+				<div>
+					<div>															
+						Szukaj Pacjenta<br>
+						<input id="input" type="search" placeholder="Search..">
+					</div>			
+					<table class="table table-bordered table-striped" >
+						<thead class="thead-dark">
+							<tr>
+								<th>Id </th>
+								<th>Imię </th>
+								<th>Nazwisko </th>
+								<th>Miasto</th>
+								<th>Ulica</th>
+								<th>Nr Domu</th>
+								<th>Pesel</th>
+								<th colspan="3">Aktywności</th>							
+							</tr>
+						</thead>
+						<tbody id="tables">
+							<tr th:each = "tmppatient : *{patients}">
+								<td th:text = "*{tmppatient.id}"/>
+								<td th:text = "*{tmppatient.name}"/>
+								<td th:text = "*{tmppatient.surname}"/>
+								<td th:text = "*{tmppatient.city}"/>
+								<td th:text = "*{tmppatient.street}"/>
+								<td th:text = "*{tmppatient.streetNumber}"/>
+								<td th:text = "*{tmppatient.pesel}"/>
+								<td><a th:href = "@{/patient/edit/(id=${tmppatient.id})}" 
+									class="btn btn-info btn-sm">Edytuj</a></td>
+								<td><a th:href = "@{/patient/delate/(id=${tmppatient.id})}"
+									class="btn btn-danger btn-sm"
+									onclick="if (!(confirm('Czy na pewno chcesz usunąć Pacjenta '))) return false">Usuń</a></td>
+								<td><a th:href = "@{/patient/add-visit/(id=${tmppatient.id})}" class="btn btn-info btn-sm">Dodaj Wizytę</a></td>
+							</tr>
+						</tbody>
+					</table>			
+				</div>
+				</main>
+			</div>
+		</div>
+	</section>	
+</body>
+</html>

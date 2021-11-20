@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Przychodnia</title>
+	<meta charset="UTF-8"/>	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/app.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+			<a class="navbar-brand mr-5" href="/home">Przychodnia</a>
+				<div class="collapse navbar-collapse" id="mainmenu">
+					<ul class="navbar-nav mr-auto">		
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/patient/add">Dodaj Pacjenta</a>
+							</li>		
+							 <li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+							 	<a class="nav-link" href="/patient">Pacjent</a>
+						 	</li>	
+							<li sec:authorize = "hasRole('ADMIN')" class="nav-item">
+								<a class="nav-link" href="/user/add">Pracownik</a>
+							</li>						
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/user/doctors">Grafik</a>
+							</li>
+						<li class="nav-item">
+							<a class="nav-link"  th:href="@{/logout}">Wyloguj</a>
+						</li>
+					</ul>
+				</div>					
+			</nav>
+	</header>
+	<section>
+	    <div class="container-fluid">
+	        <div class="row">
+	            <main role="main" class="col-12 ml-sm-auto px-md-4">
+					<div>															
+						Szukaj Wizyty <br>
+						<input id="input" type="search" placeholder="Search..">
+					</div>
+					<input type="button" id = "closedVisit" value ="Wizyty Wykonane" class="btn btn-info btn-sm">
+					<input type="button" id = "openVisit" value ="Wizyty Niewykonane" class="btn btn-info btn-sm">
+					<a sec:authorize = "hasRole('DOCTOR')" class="btn btn-info btn-sm" 
+						th:href = "@{/visit/today}">Dzisiejsze wizyty</a>
+					<table class="table table-bordered table-striped">
+						<thead class="thead-dark">
+							<tr>
+								<th>Id Wizyty</th>
+								<th>Imię Pacjenta</th>
+								<th>Nazwisko Pacjenta</th>
+								<th>Imię Lekarza</th>
+								<th>Nazwisko Lekarza</th>
+								<th>Data Wizyty</th>
+								<th>Godzina Wizyty</th>
+								<th>Status</th>	
+								<th sec:authorize = "hasRole('DOCTOR')">Status Wizyta</th>							
+							</tr>
+						</thead>
+						<tbody id = "tables">
+							<tr th:each = "tmpvisit : ${visit}">
+								<td th:text = "${tmpvisit.id}"/>
+								<td th:text = "${tmpvisit.patient.name}"/>
+								<td th:text = "${tmpvisit.patient.surname}"/>
+								<td th:text = "${tmpvisit.users.name}"/>
+								<td th:text = "${tmpvisit.users.surname}"/>
+								<td th:text = "${tmpvisit.visit_date}"/>
+								<td th:text = "${tmpvisit.dates.time}"/>
+								<td><a th:if= "${tmpvisit.status} == false">Wizyta Nie Zrealizowana</a> <a th:if= "${tmpvisit.status} == true" > Wizyta Zrealizowana</a></td>
+								<td sec:authorize = "hasRole('DOCTOR')">
+									<a th:if= "${tmpvisit.status} == false" th:href = "@{/visit/visitForPatient/(id=${tmpvisit.id})}" 
+										class="btn btn-info btn-sm">Wizyta Nie Zrealizowana</a>
+									<a th:if= "${tmpvisit.status} == true" class="btn btn-info btn-sm">Wizyta Zrealizowana</a></td>						
+							</tr>
+						</tbody>
+					</table>
+				</main>			
+			</div>  
+		</div>
+	</section>		    
+</body>
+</html>

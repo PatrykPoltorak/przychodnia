@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>Przychodnia</title>
+	<meta charset="UTF-8"/>	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="/app.js"></script>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+			<a class="navbar-brand mr-5" href="/home">Przychodnia</a>
+				<div class="collapse navbar-collapse" id="mainmenu">
+					<ul class="navbar-nav mr-auto">		
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/patient/add">Dodaj Pacjenta</a>
+							</li>		
+							 <li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+							 	<a class="nav-link" href="/patient">Pacjent</a>
+						 	</li>	
+							<li sec:authorize = "hasRole('ADMIN')" class="nav-item">
+								<a class="nav-link" href="/user/add">Pracownik</a>
+							</li>						
+							<li sec:authorize = "hasAnyRole('ADMIN','RECEPTION')" class="nav-item">
+								<a class="nav-link" href="/user/doctors">Grafik</a>
+							</li>
+						<li class="nav-item">
+							<a class="nav-link"  th:href="@{/logout}">Wyloguj</a>
+						</li>
+					</ul>
+				</div>					
+			</nav>
+	</header>
+	<section>
+	    <div class="container-fluid">
+	        <div class="row">
+	            <main role="main" class="col-12 ml-sm-auto px-md-4">
+					<div>									
+						<a th:href = "@{/visit/visitForPatient/allVisit(id=${visit.patient.id}, visitid= ${visit.id})}" 
+									class="btn btn-info btn-sm">Wizyty Pacjenta</a>
+						<form action="#" th:action="@{/visit/visitForPatient}" th:object="${visit}" method="post">					
+							Imię Pacjenta
+							<a th:text = "${visit.patient.name}" class="form-control mb-4 col-4"></a>
+							Nazwisko Pacjenta
+							<a th:text = "${visit.patient.surname}" class="form-control mb-4 col-4"/></a>	
+							Imię Lekarza
+							<a th:text = "${visit.users.name}" class="form-control mb-4 col-4"/></a>
+							Nazwisko Lekarza
+							<a th:text = "${visit.users.surname}" class="form-control mb-4 col-4"/></a>
+							Data
+							<a th:text = "${visit.visit_date}"  class="form-control mb-4 col-4"/></a>
+							Status Wizyty
+							<a th:text = "${visit.status}" class="form-control mb-4 col-4"/></a>
+							<input type="hidden" th:value = "${visit.patient.id}" name ="patient"/>
+							<input type="hidden" th:value = "${visit.users.id}" name ="users"/>
+							<input type="hidden" th:value = "${visit.id}" name ="id"/>
+							<input type="hidden" th:value = "${visit.dates.id}" name ="dates"/>
+							<input type="hidden" th:value = "${visit.visit_date}" name ="visit_date"/>
+							<input type = "submit" value = "Wizyta Wykonana" class="btn btn-info col-2"/>				
+						</form>									
+					</div>	
+				</main>		
+			</div>
+		</div>
+	</section>	
+</body>
+</html>
